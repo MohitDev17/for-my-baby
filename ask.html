@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Teah, one question 🤡</title>
+<style>
+:root{color-scheme:light;--ink:#5c4300;--accent:#c98500;--btn:#ffd54a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 50% 25%,#fffdf0 0%,#fff6c4 45%,#fff0a6 100%);font-family:Georgia,"Times New Roman",serif;color:var(--ink);overflow:hidden}
+#petals{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.fall{position:absolute;top:-60px;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+main{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.big{font-size:4rem;margin:0 0 6px;animation:wob 2.4s ease-in-out infinite}
+@keyframes wob{50%{transform:rotate(-8deg) scale(1.08)}}
+h1{font-size:1.9rem;color:var(--accent);margin:0 0 8px;line-height:1.25}
+.sub{margin:0 0 26px;font-style:italic;font-size:1.1rem}
+.row{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;min-height:90px}
+button{font:inherit;border:0;border-radius:999px;color:var(--ink);cursor:pointer;box-shadow:0 4px 12px rgba(201,133,0,.28);background:var(--btn);padding:12px 24px;font-size:1.1rem;transition:font-size .25s,padding .25s}
+#no{background:#fff;border:2px solid var(--btn);z-index:5;transition:left .25s,top .25s}
+#yes.full{position:fixed;inset:0;width:100%;height:100%;border-radius:0;z-index:20;font-size:2.4rem;padding:20px}
+#win{display:none;position:relative;z-index:3}
+#win h1{font-size:2.2rem}
+</style>
+</head>
+<body>
+<div id="petals"></div>
+<main>
+  <div id="ask">
+    <div class="big">🤡</div>
+    <h1>Teah, will you be mine, madame?</h1>
+    <p class="sub">Choose carefully. 🌼</p>
+    <div class="row"><button id="yes">Yes 💛</button><button id="no">No</button></div>
+  </div>
+  <div id="win">
+    <div class="big">💛</div>
+    <h1>YAYYY! Best decision ever, madame!</h1>
+    <p class="sub">Get ready for a lot of kisses. 🌷🤡</p>
+  </div>
+</main>
+<script>
+var TEXTS=["No","Are you sure?","Really sure?? 🥺","Think again, madame","Teah… please 🥹","I will bring kisses 💋","Wrong button!","Why is it running? 😭","Okay, just click Yes 🤡"];
+var daisy='<svg width="SZ" height="SZ" viewBox="-50 -50 100 100"><g fill="#ffd23f">'+[0,45,90,135].map(function(a){return '<ellipse rx="10" ry="40" transform="rotate('+a+')"/>'}).join('')+'</g><circle r="14" fill="#e08a00"/></svg>';
+var tulip='<svg width="SZ" height="SZ" viewBox="0 0 60 90"><path d="M30 88V45" stroke="#7aa53a" stroke-width="4"/><path d="M10 10c0 22 8 38 20 38s20-16 20-38c-6 6-12 6-20-4-8 10-14 10-20 4z" fill="#ffc400"/></svg>';
+var rose='<svg width="SZ" height="SZ" viewBox="-50 -50 100 100"><circle r="38" fill="#f7c200"/><path d="M0-30a30 30 0 1 1-26 15M0-18a18 18 0 1 1-15 9M0-8a8 8 0 1 1-7 4" fill="none" stroke="#c98a00" stroke-width="4" stroke-linecap="round"/></svg>';
+function drift(n){
+  var box=document.getElementById('petals');
+  for(var i=0;i<n;i++){
+    var d=document.createElement('div');d.className='fall';
+    d.style.left=Math.random()*100+'%';
+    d.style.animationDuration=(9+Math.random()*10)+'s';
+    d.style.animationDelay=(-Math.random()*18)+'s';
+    d.style.opacity=.55+Math.random()*.4;
+    var t=[daisy,tulip,rose][Math.floor(Math.random()*3)];
+    d.innerHTML=t.replace(/SZ/g,Math.round(22+Math.random()*30));
+    box.appendChild(d);
+  }
+}
+drift(18);
+
+var yes=document.getElementById('yes'),no=document.getElementById('no'),n=0;
+function dodge(e){
+  if(e&&e.preventDefault)e.preventDefault();
+  n++;
+  no.textContent=TEXTS[Math.min(n,TEXTS.length-1)];
+  yes.style.fontSize=(17.6+n*5)+'px';
+  yes.style.padding=(12+n*2)+'px '+(24+n*4)+'px';
+  if(n>=14){yes.classList.add('full');yes.removeAttribute('style');no.style.display='none';return}
+  no.style.position='fixed';
+  var w=no.offsetWidth,h=no.offsetHeight;
+  no.style.left=Math.max(8,Math.random()*(window.innerWidth-w-16))+'px';
+  no.style.top=Math.max(8,Math.random()*(window.innerHeight-h-16))+'px';
+}
+no.addEventListener('mouseenter',dodge);
+no.addEventListener('touchstart',dodge,{passive:false});
+no.addEventListener('click',dodge);
+yes.addEventListener('click',function(){
+  document.getElementById('ask').style.display='none';
+  yes.classList.remove('full');no.style.display='none';
+  document.getElementById('win').style.display='block';
+  drift(50);
+});
+</script>
+</body>
+</html>

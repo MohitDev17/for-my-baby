@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Teah, one question 🌸</title>
+<style>
+:root{color-scheme:light;--ink:#6b1f3d;--rose:#e0457b;--soft:#ffd6e3;--card:#fff8fb;--line:#ffb3cc;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 50% 20%,#fff1f6 0%,#ffd6e3 55%,#ffbcd2 100%);font-family:Georgia,"Times New Roman",serif;color:var(--ink);overflow:hidden}
+#rain{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.fall{position:absolute;top:-60px;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(112vh) rotate(360deg)}}
+main{position:relative;height:100%;display:flex;align-items:center;justify-content:center;padding:16px}
+.card{width:min(440px,100%);background:var(--card);border:2px solid var(--line);border-radius:28px;box-shadow:0 14px 36px rgba(224,69,123,.25);padding:26px 20px 28px;text-align:center}
+.flower{font-size:4.4rem;line-height:1;display:inline-block;animation:sway 3s ease-in-out infinite;transition:transform .5s}
+@keyframes sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.flower.sad{animation:none;transform:rotate(18deg) translateY(6px)}
+h1{font-size:1.8rem;line-height:1.25;margin:8px 0 10px;color:var(--rose)}
+#say{min-height:2.8em;margin:0 0 18px;font-style:italic;font-size:1.05rem}
+.row{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;min-height:96px}
+button{font:inherit;color:#fff;cursor:pointer;background:var(--rose);border:0;border-radius:999px;box-shadow:0 5px 14px rgba(224,69,123,.35);padding:12px 26px;font-size:1.15rem;transition:all .35s}
+button:hover{filter:brightness(1.05)}
+#no{background:#fff;color:var(--ink);border:2px solid var(--line);box-shadow:none}
+#no.sad{background:#e9e9f2;color:#5d6280;border-color:#c9cbe0}
+#no.drop{animation:droop .6s}
+@keyframes droop{30%{transform:translateY(-4px)}100%{transform:translateY(0)}}
+#win{display:none}
+#win .flower{font-size:5rem}
+@media (prefers-reduced-motion:reduce){.flower,.fall{animation:none}}
+</style>
+</head>
+<body>
+<div id="rain"></div>
+<main>
+  <div class="card">
+    <div id="ask">
+      <div class="flower" id="fl">🌸</div>
+      <h1>Teah, will you be my girlfriend?</h1>
+      <p id="say">I picked these flowers just for you.</p>
+      <div class="row"><button id="yes">Yes 💗</button><button id="no">No</button></div>
+    </div>
+    <div id="win">
+      <div class="flower">💗</div>
+      <h1>Yayyy!! 🎉</h1>
+      <p>You just made me the happiest person in the world. Get ready for a lot of kisses. 💋🌷</p>
+    </div>
+  </div>
+</main>
+<script>
+var NO=["No","No 🥺","No 😢","Please? 😭","My heart… 💔","Okay… 😿","…💧"];
+var SAY=["I picked these flowers just for you.","Aww, are you sure? 🥺","That hurt a little…","Teah… I will bring you kisses 💋","The flowers are starting to wilt 🥀","I will wait right here. 😢","Last chance… pretty please? 🌷"];
+var FL=["🌸","🌸","🌷","🌷","🥀","🥀","🥀"];
+var EMO=["🌸","🌷","🌺","🌹","💮","🌼"];
+function rain(n){
+  var b=document.getElementById('rain');
+  for(var i=0;i<n;i++){
+    var d=document.createElement('div');d.className='fall';
+    d.textContent=EMO[Math.floor(Math.random()*EMO.length)];
+    d.style.left=Math.random()*100+'%';
+    d.style.fontSize=(20+Math.random()*26)+'px';
+    d.style.animationDuration=(8+Math.random()*10)+'s';
+    d.style.animationDelay=(-Math.random()*16)+'s';
+    d.style.opacity=.8;
+    b.appendChild(d);
+  }
+}
+rain(22);
+var yes=document.getElementById('yes'),no=document.getElementById('no'),say=document.getElementById('say'),fl=document.getElementById('fl'),n=0;
+no.addEventListener('click',function(){
+  n++;
+  var i=Math.min(n,NO.length-1);
+  no.textContent=NO[i];
+  say.textContent=SAY[i];
+  fl.textContent=FL[i];
+  if(n>=4)fl.classList.add('sad');
+  no.classList.add('sad');
+  no.classList.remove('drop');void no.offsetWidth;no.classList.add('drop');
+  no.style.fontSize=Math.max(11,17-n*1.2)+'px';
+  no.style.padding=Math.max(6,12-n)+'px '+Math.max(12,24-n*2)+'px';
+  no.style.transform='rotate('+(n*3)+'deg) translateY('+(n*3)+'px)';
+  no.style.opacity=Math.max(.45,1-n*.08);
+  yes.style.fontSize=Math.min(40,18+n*3)+'px';
+  yes.style.padding=(12+n*2)+'px '+(26+n*4)+'px';
+});
+yes.addEventListener('click',function(){
+  document.getElementById('ask').style.display='none';
+  document.getElementById('win').style.display='block';
+  rain(60);
+});
+</script>
+</body>
+</html>
